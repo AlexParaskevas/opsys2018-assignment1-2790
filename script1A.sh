@@ -13,22 +13,22 @@ fi
 
 > ~/Desktop/OSProject/outfile.txt
 
-while IFS='\n' read line do
+while IFS='\n' read line do 
     if [[$line == "#"*]]; then
 
 	break
      
      else
 	
-	curlstatus=`curl -s -w -o /dev/null "%{http_code}" "$line" `
-	pagetemp=`echo "$line" |  cut -d '/' -f 3`
+	curlstatus=`curl -s -w -o /dev/null "%{http_code}" "$line" ` #curl each webpage/line
+	pagetemp=`echo "$line" |  cut -d '/' -f 3` #keeps only the http://www.url.com/
 	if [[$curlstatus == "200"]]; then
 		if [[-f  ~/Desktop/OSProject/"$pagetemp".txt]]; then
-			curl -s $lINE > /tmp/"$pagetemp".txt 
-			if [[$(cmp -s ~/Desktop/OSProject/"$pagetemp".txt /tmp/"$pagetemp".txt)<>0]]; then
-				echo $line >> ~/Desktop/OSProject/outfile.txt
-				rm ~/Desktop/OSProject/outfile.txt
-				mv /tmp/"$pagetemp".txt ~/Desktop/OSProject	
+			curl -s $line > /tmp/"$pagetemp".txt 
+			if [[$(cmp -s ~/Desktop/OSProject/"$pagetemp".txt /tmp/"$pagetemp".txt)<>0]]; then 
+				echo $line >> ~/Desktop/OSProject/outfile.txt 
+				rm ~/Desktop/OSProject/outfile.txt #removes the outdated output
+				mv /tmp/"$pagetemp".txt ~/Desktop/OSProject #replaces it with the updated	
 			fi
 		
 		else
