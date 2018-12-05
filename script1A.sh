@@ -11,7 +11,7 @@ else
 	break;
 fi
 
->~/Desktop/OSProject/outfile.txt
+> ~/Desktop/OSProject/outfile.txt
 
 while IFS='\n' read line do
     if [[$line == "#"*]]; then
@@ -20,11 +20,11 @@ while IFS='\n' read line do
      
      else
 	
-	curlstatus=`curl -s -w "%{http_code}" "$line" -o /dev/null`
+	curlstatus=`curl -s -w -o /dev/null "%{http_code}" "$line" `
 	pagetemp=`echo "$line" |  cut -d '/' -f 3`
 	if [[$curlstatus == "200"]]; then
 		if [[-f  ~/Desktop/OSProject/"$pagetemp".txt]]; then
-			curl -s $LINE > /tmp/"$pagetemp".txt 
+			curl -s $lINE > /tmp/"$pagetemp".txt 
 			if [[$(cmp -s ~/Desktop/OSProject/"$pagetemp".txt /tmp/"$pagetemp".txt)<>0]]; then
 				echo $line >> ~/Desktop/OSProject/outfile.txt
 				rm ~/Desktop/OSProject/outfile.txt
