@@ -36,7 +36,7 @@ while IFS='\n' read line do
 			curl -s $line > ~/Desktop/OSProject/"$pagetemp".txt
 		fi
 	else
-		echo "$line Failed"
+		echo "$line FAILED"
 	fi
 
      fi
