@@ -31,14 +31,14 @@ while IFS='\n' read -r line do
      else
 	
 	curlstatus=`curl -s -w -o /dev/null "%{http_code}" "$line" `
-	pagetemp=`echo "$line" |  cut -d '/' -f 3`
+	pagetemp=`echo "$line" |  cut -d '/' -f 3` #keeps only the http://www.url.com/
 	if [[$curlstatus == "200"]]; then
 		if [[-f  ~/Desktop/opsysA/"$pagetemp".txt]]; then
-			curl -s $lINE > /tmp/"$pagetemp".txt 
+			curl -s $lINE > /tmp/"$pagetemp".txt #curl each webpage/line
 			if [[$(cmp -s ~/Desktop/opsysA/"$pagetemp".txt /tmp/"$pagetemp".txt)<>0]]; then
 				echo $line >> ~/Desktop/opsysA/outfile.txt
-				rm ~/Desktop/opsysA/outfile.txt
-				mv /tmp/"$pagetemp".txt ~/Desktop/opsysA	
+				rm ~/Desktop/opsysA/outfile.txt #removes the outdated output
+				mv /tmp/"$pagetemp".txt ~/Desktop/opsysA #replaces it with the updated		
 			fi
 		
 		else
@@ -46,7 +46,7 @@ while IFS='\n' read -r line do
 			curl -s $line > ~/Desktop/opsysA/"$pagetemp".txt
 		fi
 	else
-		echo "$line Failed"
+		echo "$line FAILED"
 	fi
 
      fi
@@ -57,7 +57,7 @@ if [[-f ~/Desktop/opsysA/outfile.txt]] then
 	echo "Changed URLs:"
 	cat ~/Desktop/opsysA/outfile.txt
 else
-	echo "ERROR"
+	echo "UKNOWN ERROR"
 fi
 
 
