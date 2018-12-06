@@ -2,8 +2,17 @@
 
 Afile=$1
 
+if [ -f $1 ]; then
+	echo "File $1 exists"
 
-dir_name=~/Desktop/OSProject
+else
+
+	echo "Wrong directory/cannot find List of Adresses"
+	exit $?
+fi
+
+
+dir_name=~/Desktop/opsysA
 
 if [ ! -f $dir_name ]; then
 	mkdir -p $dir_name
@@ -11,41 +20,42 @@ else
 	break;
 fi
 
-> ~/Desktop/OSProject/outfile.txt
+> ~/Desktop/opsysA/outfile.txt
 
-while IFS='\n' read line do 
+while IFS='\n' read -r line do
+
     if [[$line == "#"*]]; then
 
-	break
+	break;
      
      else
 	
-	curlstatus=`curl -s -w -o /dev/null "%{http_code}" "$line" ` #curl each webpage/line
-	pagetemp=`echo "$line" |  cut -d '/' -f 3` #keeps only the http://www.url.com/
+	curlstatus=`curl -s -w -o /dev/null "%{http_code}" "$line" `
+	pagetemp=`echo "$line" |  cut -d '/' -f 3`
 	if [[$curlstatus == "200"]]; then
-		if [[-f  ~/Desktop/OSProject/"$pagetemp".txt]]; then
-			curl -s $line > /tmp/"$pagetemp".txt 
-			if [[$(cmp -s ~/Desktop/OSProject/"$pagetemp".txt /tmp/"$pagetemp".txt)<>0]]; then 
-				echo $line >> ~/Desktop/OSProject/outfile.txt 
-				rm ~/Desktop/OSProject/outfile.txt #removes the outdated output
-				mv /tmp/"$pagetemp".txt ~/Desktop/OSProject #replaces it with the updated	
+		if [[-f  ~/Desktop/opsysA/"$pagetemp".txt]]; then
+			curl -s $lINE > /tmp/"$pagetemp".txt 
+			if [[$(cmp -s ~/Desktop/opsysA/"$pagetemp".txt /tmp/"$pagetemp".txt)<>0]]; then
+				echo $line >> ~/Desktop/opsysA/outfile.txt
+				rm ~/Desktop/opsysA/outfile.txt
+				mv /tmp/"$pagetemp".txt ~/Desktop/opsysA	
 			fi
 		
 		else
 			echo "$line INIT"
-			curl -s $line > ~/Desktop/OSProject/"$pagetemp".txt
+			curl -s $line > ~/Desktop/opsysA/"$pagetemp".txt
 		fi
 	else
-		echo "$line FAILED"
+		echo "$line Failed"
 	fi
 
      fi
 
 done < "$1"
 
-if [[-f ~/Desktop/OSProject/outfile.txt]] then
+if [[-f ~/Desktop/opsysA/outfile.txt]] then
 	echo "Changed URLs:"
-	cat ~/Desktop/OSProject/outfile.txt
+	cat ~/Desktop/opsysA/outfile.txt
 else
 	echo "ERROR"
 fi
