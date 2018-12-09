@@ -26,15 +26,15 @@ while IFS=$'\n' read -r line; do
 
     if [ ! $line == "#"* ]; then
 
-	curlstatus=`curl -s -w "%{http_code}\n" "$line" -o /dev/null`
-	pagetemp=`echo "$line" |  cut -d '/' -f 3`
+	curlstatus=`curl -s -w "%{http_code}\n" "$line" -o /dev/null` #curl each webpage/line
+	pagetemp=`echo "$line" |  cut -d '/' -f 3` #keeps only the http://www.url.com/
 	if [ $curlstatus == "200" ]; then
 		if [ -f  ~/Desktop/opsysA/"$pagetemp".txt ]; then
 			curl -s $lINE > /tmp/"$pagetemp".txt 
 			if [ ! $(cmp -s ~/Desktop/opsysA/"$pagetemp".txt /tmp/"$pagetemp".txt) == "0" ]; then
 				echo $line >> ~/Desktop/opsysA/outfile.txt
-				rm ~/Desktop/opsysA/"$pagetemp".txt
-				mv /tmp/"$pagetemp".txt ~/Desktop/opsysA	
+				rm ~/Desktop/opsysA/"$pagetemp".txt #removes the outdated output 
+				mv /tmp/"$pagetemp".txt ~/Desktop/opsysA #replaces it with the updated		
 			fi
 		
 		else
