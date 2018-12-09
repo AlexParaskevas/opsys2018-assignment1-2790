@@ -20,7 +20,7 @@ fi
 
 while IFS=$'\n' read -r line; do
 
-    if [ ! $line == "#"* ]; then
+    if [[ ! $line == "#"* ]]; then
 
 	curlstatus=`curl -s -w "%{http_code}\n" "$line" -o /dev/null` #curl each webpage/line
 	pagetemp=`echo "$line" |  cut -d '/' -f 3` #keeps only the http://www.url.com/
@@ -38,7 +38,7 @@ while IFS=$'\n' read -r line; do
 			curl -s $line > ~/Desktop/opsysA/"$pagetemp".txt
 		fi
 	else
-		echo "$line Failed"
+		echo "$line FAILED"
 	fi
 
      fi
@@ -50,7 +50,7 @@ if [ -s ~/Desktop/opsysA/outfile.txt ]; then
 	cat ~/Desktop/opsysA/outfile.txt
 fi
 
-rm ~/Desktop/opsysA/outfile.txt
+
 
 
 
