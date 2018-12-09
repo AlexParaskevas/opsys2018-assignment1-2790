@@ -29,39 +29,29 @@ if [ ! -d ~/Desktop/repos ]; then
 fi
 
 find ~/Desktop/repos_temp -type f -name "*.txt" | while read txt; do 
-
 	mv $txt ~/Desktop/repos
-
 done
 
 rm -rf ~/Desktop/repos_temp
-
-
-
 dir_name=~/Desktop/Assignments
-
 if [ ! -f $dir_name ]; then
 
 	mkdir -p $dir_name
 fi
 
-
 cd ~/Desktop/Assignments
-
-
 
 for file in ~/Desktop/repos/*.txt; do
 	while IFS=$'\n' read -r line; do
 		if [ ! $line == "#"* ]; then
 			if [ $line == "https"* ]; then
-		
+			
 				repourl=`echo "$line" | cut -d'/' -f 5` #keeps the fixed repo link
 				if [ ! -d ~/Desktop/Assignments/$repourl ]; then
-
+				
 					mkdir ~/Desktop/Assignments/$repourl
-
 				fi
-		
+	
 				git clone $line ~/Desktop/Assignments/$repourl
 				if [$? == "0"]; then #if cloning is successfull then returns 0
 			
