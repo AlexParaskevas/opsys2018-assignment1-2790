@@ -1,8 +1,14 @@
 #!/bin/bash
 
+urlcheck()
+{
+	pagetemp= echo "$1" |  cut -d '/' -f 3  #$1=$line
+	curl -s $line > /tmp/"$pagetemp".txt
+}
+
 Afile=$1
 
-dir_name=~/Desktop/OSProject
+dir_name=~/Desktop/opsysB
 
 if [ ! -f $dir_name ]; then
 	mkdir -p $dir_name
@@ -10,30 +16,24 @@ else
 	break;
 fi
 
-> ~/Desktop/OSProject/outfile.txt
+> ~/Desktop/opsysB/outfile.txt
 
-while IFS='\n' read line do 
-    if [[$line == "#"*]]; then
-
-	break
-     
-     else
-	
-	curlstatus=`curl -s -w -o /dev/null "%{http_code}" "$line" ` #curl each webpage/line
+while IFS=$'\n' read line; do 
+    if [ ! $line == "#"* ]; then
+	curlstatus=`curl -s -w "%{http_code}\n" "$line" -o /dev/null` #curl each webpage/line
 	pagetemp=`echo "$line" |  cut -d '/' -f 3` #keeps only the http://www.url.com/
-	if [[$curlstatus == "200"]]; then
-		if [[-f  ~/Desktop/OSProject/"$pagetemp".txt]]; then
+	if [ $curlstatus == "200" ]; then
+		if [ -f  ~/Desktop/opsysB/"$pagetemp".txt ]; then
 			curl -s $line > /tmp/"$pagetemp".txt 
-			if [[$(cmp -s ~/Desktop/OSProject/"$pagetemp".txt /tmp/"$pagetemp".txt)<>0]]; then 
-				echo $line >> ~/Desktop/OSProject/outfile.txt 
-				rm ~/Desktop/OSProject/outfile.txt  #removes the outdated output 
-				mv /tmp/"$pagetemp".txt ~/Desktop/OSProject  #replaces it with the updated	
+			if [ ! $(cmp -s ~/Desktop/opsysB/"$pagetemp".txt /tmp/"$pagetemp".txt) == "0" ]; then 
+				echo $line >> ~/Desktop/opsysB/outfile.txt 
+				rm ~/Desktop/opsysB/"$pagetemp".txt  #removes the outdated output 
+				mv /tmp/"$pagetemp".txt ~/Desktop/opsysB  #replaces it with the updated	
 			fi
 		
 		else
-			echo "$line INIT" &			
-			pagetemp= echo "$1" |  cut -d '/' -f 3 & 
-			curl -s $line > /tmp/"$pagetemp".txt &
+			echo "$line INIT" 			
+			urlcheck "$line" & #passes line as first argument
 		fi
 	else
 		echo "$line FAILED" 
@@ -43,10 +43,10 @@ while IFS='\n' read line do
 
 done < "$1"
 
-if [[-f ~/Desktop/OSProject/outfile.txt]] then
+if [ -s ~/Desktop/opsysB/outfile.txt ]; then
 	echo "Changed URLs:"
-	cat ~/Desktop/OSProject/outfile.txt
-else
-	echo "ERROR"
+	cat ~/Desktop/opsysB/outfile.txt
+
 fi
-rm ~/Desktop/OSProject/outfile.txt
+
+rm ~/Desktop/opsysB/outfile.txt
