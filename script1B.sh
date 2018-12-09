@@ -8,11 +8,7 @@ urlcheck()
 
 Afile=$1
 
-if [ -f $1 ]; then
-	echo "File $1 exists"
-
-else
-
+if [ ! -f $1 ]; then
 	echo "Wrong directory/cannot find List of Adresses"
 	exit $?
 fi
