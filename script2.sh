@@ -94,17 +94,3 @@ for file1 in ~/Desktop/Assignments/*; do
 
 
 done			
-
-	
-	
-
-
-		
-
-
-
-
-
-
-
-
