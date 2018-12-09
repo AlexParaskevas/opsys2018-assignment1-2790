@@ -3,10 +3,6 @@
 Afile=$1
 
 if [ -f $1 ]; then
-	echo "File $1 exists"
-
-else
-
 	echo "Wrong directory/cannot find List of Adresses"
 	exit $?
 fi
