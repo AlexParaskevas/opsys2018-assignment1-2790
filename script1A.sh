@@ -18,6 +18,8 @@ fi
 
 > ~/Desktop/opsysA/outfile.txt
 
+#Οι γραμμές που ξεκινάνε με # βγαίνουν με echo "FAILED", ωστόσο δεν λαμβάνονται υπ' όψιν πουθενά στον κώδικα ξανά. Αν η παρακάτω if η οποία το ελέγχει αυτό γίνει με μονά "[" τότε δεν τις εμφανίζει καν ως "FAILED" ωστόσο παρουσιάζει syntax error "too many arguments", γι αυτό και το έχω αφήσει ως έχει.
+
 while IFS=$'\n' read -r line; do
 
     if [[ ! $line == "#"* ]]; then
@@ -26,8 +28,8 @@ while IFS=$'\n' read -r line; do
 	pagetemp=`echo "$line" |  cut -d '/' -f 3` #keeps only the http://www.url.com/
 	if [ $curlstatus == "200" ]; then
 		if [ -f  ~/Desktop/opsysA/"$pagetemp".txt ]; then
-			curl -s $lINE > /tmp/"$pagetemp".txt 
-			if [ ! $(cmp -s ~/Desktop/opsysA/"$pagetemp".txt /tmp/"$pagetemp".txt) == "0" ]; then
+			curl -s $line > /tmp/"$pagetemp".txt 
+			if [ "$cmp -s ~/Desktop/opsysA/"$pagetemp".txt /tmp/"$pagetemp".txt" != "" ]; then
 				echo $line >> ~/Desktop/opsysA/outfile.txt
 				rm ~/Desktop/opsysA/"$pagetemp".txt #removes the outdated output 
 				mv /tmp/"$pagetemp".txt ~/Desktop/opsysA #replaces it with the updated		
@@ -49,6 +51,8 @@ if [ -s ~/Desktop/opsysA/outfile.txt ]; then
 	echo "Changed URLs:"
 	cat ~/Desktop/opsysA/outfile.txt
 fi
+
+rm ~/Desktop/opsysA/outfile.txt
 
 
 
