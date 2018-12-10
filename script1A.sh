@@ -16,6 +16,11 @@ else
 	break;
 fi
 
+echo "Drawing urls from file..."
+echo "Creating directories..."
+sleep 2
+
+
 > ~/Desktop/opsysA/outfile.txt
 
 #Οι γραμμές που ξεκινάνε με # βγαίνουν με echo "FAILED", ωστόσο δεν λαμβάνονται υπ' όψιν πουθενά στον κώδικα ξανά. Αν η παρακάτω if η οποία το ελέγχει αυτό γίνει με μονά "[" τότε δεν τις εμφανίζει καν ως "FAILED" ωστόσο παρουσιάζει syntax error "too many arguments", γι αυτό και το έχω αφήσει ως έχει.
@@ -24,9 +29,11 @@ while IFS=$'\n' read -r line; do
 
     if [[ ! $line == "#"* ]]; then
 
+
 	curlstatus=`curl -s -w "%{http_code}\n" "$line" -o /dev/null` #curl each webpage/line
+	status1=$?
 	pagetemp=`echo "$line" |  cut -d '/' -f 3` #keeps only the http://www.url.com/
-	if [ $curlstatus == "200" ]; then
+	if [ $status1 == "0" ]; then
 		if [ -f  ~/Desktop/opsysA/"$pagetemp".txt ]; then
 			curl -s $line > /tmp/"$pagetemp".txt 
 			if [ "$cmp -s ~/Desktop/opsysA/"$pagetemp".txt /tmp/"$pagetemp".txt" != "" ]; then
