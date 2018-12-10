@@ -12,6 +12,7 @@ if [ ! -f $1 ]; then
 	exit $?
 fi
 
+
 dir_name=~/Desktop/opsysB
 
 if [ ! -f $dir_name ]; then
@@ -20,6 +21,11 @@ else
 	break;
 fi
 
+echo "Drawing urls from file..."
+echo "Creating directories..."
+sleep 2
+
+
 > ~/Desktop/opsysB/outfile.txt
 
 while IFS=$'\n' read line; do 
@@ -27,8 +33,9 @@ while IFS=$'\n' read line; do
     if [[ ! $line == "#"* ]]; then
 
 	curlstatus=`curl -s -w "%{http_code}\n" "$line" -o /dev/null` #curl each webpage/line
+	status1=$?
 	pagetemp=`echo "$line" |  cut -d '/' -f 3` #keeps only the http://www.url.com/
-	if [ $curlstatus == "200" ]; then
+	if [ $status1 == "0" ]; then
 		if [ -f  ~/Desktop/opsysB/"$pagetemp".txt ]; then
 			curl -s $line > /tmp/"$pagetemp".txt 
 			if [ "$cmp -s ~/Desktop/opsysB/"$pagetemp".txt /tmp/"$pagetemp".txt" != "" ]; then 
